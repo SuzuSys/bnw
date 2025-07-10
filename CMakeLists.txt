@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.28)
-project(CMakeSFMLProject LANGUAGES CXX)
+project(BNW LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+
+set(source ${CMAKE_SOURCE_DIR}/assets)
+set(destination ${CMAKE_CURRENT_BINARY_DIR}/bin/assets)
+
+message(STATUS ${CMAKE_SOURCE_DIR})
+message(STATUS ${CMAKE_CURRENT_BINARY_DIR})
 
 include(FetchContent)
 FetchContent_Declare(SFML
@@ -14,4 +21,10 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(main src/main.cpp)
 target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+target_link_libraries(main PRIVATE SFML::Graphics SFML::Audio)
+
+add_custom_target(
+  copy_assets ALL
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
+  COMMENT "Copy assets from ${source} to ${destination}"
+)
