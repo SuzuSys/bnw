@@ -1,14 +1,14 @@
-#include <SFML/Graphics.hpp>
+Ôªø#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 
 int main()
 {
     // create the window
-    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "My window");
+    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "BNW");
 
     // load a font
-	sf::Font font("assets/NotoSansJP-VariableFont_wght.ttf");
+    sf::Font font("assets/NotoSansJP-VariableFont_wght.ttf");
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -31,11 +31,11 @@ int main()
         renderTexture.clear();
         
         sf::Text text(font);
-        text.setString(L"Ç±ÇÒÇ…ÇøÇÕê¢äEÅI");
-		text.setCharacterSize(24);
-		text.setFillColor(sf::Color::White);
-		text.setStyle(sf::Text::Bold);
-		window.draw(text);
+        text.setString(L"„Åì„Çì„Å´„Å°„ÅØ‰∏ñÁïåÔºÅ");
+        text.setCharacterSize(24);
+        text.setFillColor(sf::Color::White);
+        text.setStyle(sf::Text::Bold);
+        window.draw(text);
 
         // end the current frame
         window.display();
