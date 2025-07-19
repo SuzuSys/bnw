@@ -15,6 +15,10 @@ int main()
     // load a font
     sf::Font font("assets/NotoSansJP-VariableFont_wght.ttf");
 
+    // input space
+    bool forcus_input = false;
+    std::wstring str = L"";
+
     // run the program as long as the window is open
     sf::Clock deltaClock;
     while (window.isOpen())
@@ -24,11 +28,22 @@ int main()
         {
             ImGui::SFML::ProcessEvent(window, *event);
             // "close requested" event: we close the window
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()) {
                 window.close();
+                break;
+            }
+            // input letters
+            if (forcus_input) {
+                if (const auto* textEntered = event->getIf<sf::Event::TextEntered>()) {
+                    char32_t c = textEntered->unicode;
+                    if (c == 8)
+                        str.erase(str.end() - 1, str.end());
+                    else
+                        str += c;
+                }
+            }
         }
         ImGui::SFML::Update(window, deltaClock.restart());
-        ImGui::ShowDemoWindow();
 
         ImGui::Begin("Hello, world!");
         ImGui::Button("Look at this pretty button");
@@ -44,8 +59,7 @@ int main()
         renderTexture.clear();
 
         sf::Text text(font);
-        const std::wstring t = L"こんにちは";
-        text.setString(t);
+        text.setString(str);
 
         text.setCharacterSize(24);
         text.setFillColor(sf::Color::White);
