@@ -24,11 +24,15 @@ int main()
         return -1;
 
     // TGUI
-    tgui::Gui gui{ window };
-    tgui::Button::Ptr button = tgui::Button::create("Hello");
+    tgui::Gui gui{ window,  };
+    gui.setFont(tgui::Font("assets/NotoSansJP-Regular.ttf"));
+    tgui::Button::Ptr button = tgui::Button::create(U"こんにちは");
     button->setPosition("10%", "5%");
-    button->setSize("30%", "10%");
-    button->onPress([&] { std::cout << "pressed" << std::endl; });
+    button->setSize(300, 60);
+    button->onPress([] { std::cout << "pressed" << std::endl; });
+    button->getRenderer()->setBorders(tgui::Outline(5));
+    button->getRenderer()->setRoundedBorderRadius(5);
+    button->getRenderer()->setTextSize(30);
     gui.add(button);
 
     // View
@@ -36,7 +40,7 @@ int main()
     window.setView(view);
 
     // load a font
-    sf::Font font("assets/NotoSansJP-VariableFont_wght.ttf");
+    sf::Font font("assets/NotoSansJP-Regular.ttf");
 
     // window size
     unsigned int width = 800;
