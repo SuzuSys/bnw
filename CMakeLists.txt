@@ -60,6 +60,7 @@ target_link_libraries(main PRIVATE
 
 add_custom_target(
   copy_assets ALL
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ${destination}
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${source} ${destination}
   COMMENT "Copy assets from ${source} to ${destination}"
 )
