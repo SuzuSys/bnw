@@ -7,17 +7,31 @@
 int main()
 {
     // create the window
-    sf::RenderWindow window(sf::VideoMode({ 800, 600 }), "BNW");
+    sf::ContextSettings settings;
+    settings.antiAliasingLevel = 8;
+    sf::RenderWindow window(
+        sf::VideoMode({ 800, 600 }), 
+        "BNW", 
+        sf::Style::Default, 
+        sf::State::Windowed, 
+        settings);
     window.setFramerateLimit(60);
     if (!ImGui::SFML::Init(window))
         return -1;
 
+    sf::View view(sf::FloatRect({ 0,0 }, { 800,600 })); // x,y,dx,dy
+    window.setView(view);
+
     // load a font
     sf::Font font("assets/NotoSansJP-VariableFont_wght.ttf");
 
+    // window size
+    unsigned int width = 800;
+    unsigned int height = 600;
+
     // input space
-    bool forcus_input = false;
-    std::wstring str = L"";
+    bool forcus_input = true;
+    std::wstring str = L"こんにちは！";
 
     // run the program as long as the window is open
     sf::Clock deltaClock;
@@ -32,8 +46,17 @@ int main()
                 window.close();
                 break;
             }
+            // window resize
+            else if (const auto* resized = event->getIf<sf::Event::Resized>()) {
+                width = resized->size.x;
+                height = resized->size.y;
+                sf::View view(sf::FloatRect({ 0.f,0.f }, { static_cast<float>(width), static_cast<float>(height) })); // x,y,dx,dy
+                window.setView(view);
+                std::cout << window.getSize().x << "," << window.getSize().y << std::endl;
+            }
+
             // input letters
-            if (forcus_input) {
+            else if (forcus_input) {
                 if (const auto* textEntered = event->getIf<sf::Event::TextEntered>()) {
                     char32_t c = textEntered->unicode;
                     if (c == 8)
@@ -52,23 +75,25 @@ int main()
         // clear the window with black color
         window.clear(sf::Color::Black);
 
-        // create a 500x500 render-texture
-        sf::RenderTexture renderTexture({ 500, 500 });
+        // create a render-texture
+        // sf::RenderTexture renderTexture({ width, height });
 
         // drawing uses the same functions
-        renderTexture.clear();
+        // renderTexture.clear();
 
         sf::Text text(font);
         text.setString(str);
-
-        text.setCharacterSize(24);
+        text.setCharacterSize(std::round(0.1*height));
         text.setFillColor(sf::Color::White);
         text.setStyle(sf::Text::Bold);
-
-
         window.draw(text);
-        ImGui::SFML::Render(window);
 
+        sf::CircleShape shape(50);
+        shape.setFillColor(sf::Color(100, 250, 50));
+        window.draw(shape);
+
+        
+        ImGui::SFML::Render(window);
         // end the current frame
         window.display();
     }
