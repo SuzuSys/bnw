@@ -2,6 +2,8 @@
 #include "imgui-SFML.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Backend/SFML-Graphics.hpp>
 #include <iostream>
 
 int main()
@@ -16,9 +18,20 @@ int main()
         sf::State::Windowed, 
         settings);
     window.setFramerateLimit(60);
+    
+    // ImGui
     if (!ImGui::SFML::Init(window))
         return -1;
 
+    // TGUI
+    tgui::Gui gui{ window };
+    tgui::Button::Ptr button = tgui::Button::create("Hello");
+    button->setPosition("10%", "5%");
+    button->setSize("30%", "10%");
+    button->onPress([&] { std::cout << "pressed" << std::endl; });
+    gui.add(button);
+
+    // View
     sf::View view(sf::FloatRect({ 0,0 }, { 800,600 })); // x,y,dx,dy
     window.setView(view);
 
@@ -41,6 +54,8 @@ int main()
         while (const std::optional event = window.pollEvent())
         {
             ImGui::SFML::ProcessEvent(window, *event);
+            gui.handleEvent(*event);
+
             // "close requested" event: we close the window
             if (event->is<sf::Event::Closed>()) {
                 window.close();
@@ -67,10 +82,9 @@ int main()
             }
         }
         ImGui::SFML::Update(window, deltaClock.restart());
-
-        ImGui::Begin("Hello, world!");
-        ImGui::Button("Look at this pretty button");
-        ImGui::End();
+        //ImGui::Begin("Hello, world!");
+        //ImGui::Button("Look at this pretty button");
+        //ImGui::End();
 
         // clear the window with black color
         window.clear(sf::Color::Black);
@@ -92,7 +106,7 @@ int main()
         shape.setFillColor(sf::Color(100, 250, 50));
         window.draw(shape);
 
-        
+        gui.draw();
         ImGui::SFML::Render(window);
         // end the current frame
         window.display();

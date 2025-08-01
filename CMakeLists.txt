@@ -36,12 +36,26 @@ set(IMGUI_SFML_FIND_SFML OFF)
 set(IMGUI_SFML_IMGUI_DEMO ON)
 FetchContent_MakeAvailable(ImGui_SFML)
 
+FetchContent_Declare(TGUI
+    GIT_REPOSITORY https://github.com/texus/TGUI.git
+    GIT_TAG v1.10.0
+    GIT_SHALLOW ON
+)
+set(TGUI_BACKEND SFML_GRAPHICS CACHE STRING "" FORCE)
+set(TGUI_BUILD_FRAMEWORK OFF CACHE BOOL "" FORCE)
+set(TGUI_USE_STATIC_STD_LIBS OFF CACHE BOOL "" FORCE)
+set(TGUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(TGUI_BUILD_GUI_BUILDER OFF CACHE BOOL "" FORCE)
+set(TGUI_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(TGUI)
+
 add_executable(main src/main.cpp "src/main.cpp")
 target_compile_features(main PRIVATE cxx_std_20)
 target_link_libraries(main PRIVATE 
     SFML::Graphics
     SFML::Audio
     ImGui-SFML::ImGui-SFML
+    TGUI::TGUI
 )
 
 add_custom_target(
